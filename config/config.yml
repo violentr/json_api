@@ -1,0 +1,7 @@
+development:
+  api:
+    base_url: <%= ENV["API_BASE_URL"] %>
+    user:
+      email:  <%= ENV["API_USER_EMAIL"] %>
+      password: <%= ENV["API_USER_PASSWORD"] %>
+  
