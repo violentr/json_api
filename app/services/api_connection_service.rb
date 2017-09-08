@@ -1,27 +1,32 @@
 class ApiConnectionService
-  attr_reader :url, :user_params
+  attr_reader :user_params
+
+  BASE_URL = APPCONFIG["api"]["base_url"]
 
   def initialize(user_params)
-    @url = APPCONFIG["api"]["base_url"]
     @user_params = user_params
   end
 
   def connect
     begin
-      Faraday.new(url: url, headers: headers) do |faraday|
+      Faraday.new(url: BASE_URL, headers: headers) do |faraday|
         faraday.basic_auth(*user_params.values)
         faraday.request :json
         faraday.response :json, content_type: "application/json"
         faraday.adapter Faraday.default_adapter
       end
     rescue
-      raise ApiConnectionServiceError.new "Your API url is missing"
+      raise ApiConnectionServiceError.new("Some API settings are missing")
     end
   end
 
-  def login
-    connect.post('api/sessions', api_user_credentials)
+  def auth_hash
+    response = connect.post(BASE_URL + 'api/sessions', api_user_credentials)
+    email = response.body["data"]["attributes"]["key"]
+    token = response.body["data"]["attributes"]["token"]
+    headers.merge!({"X-USER-TOKEN" => token, "X-USER-EMAIL"=> email})
   end
+
 
   private
 

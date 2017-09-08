@@ -4,8 +4,8 @@ class WelcomeController < ApplicationController
     if request.post?
       api_server = ApiConnectionService.new(user_params.to_h)
       api_server.connect
-      response = api_server.login
-      render json: {message: response.body}
+      clients = ClientService.new(api_server.auth_hash).list
+      render json: {message: clients}
     end
   end
 
