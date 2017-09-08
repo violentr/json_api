@@ -1,0 +1,20 @@
+<div style="padding:20px">
+  <%= link_to "Home", root_path %>
+</div>
+
+<% if @clients.present? %>
+  <div id="clients-list">
+    <ul class="list">
+    <% @clients.each do |client| %>
+      <li><p class="name"> Name: <%= client["attributes"]["first-name"] %> </p></li>
+      <li><p class="last-name"> Last Name: <%= client["attributes"]["last-name"] %> </p></li>
+      <li><p class="primary-phone"> Primary Phone: <%= client["attributes"]["primary-phone"] || 'no-phone' %> </p>
+      <% client["relationships"]["addresses"]["data"].each do |addr| %>
+        <li><p class="address_id"> Address Id: <%= addr["id"] %> </p></li>
+        <li><p class="address_type"> Address Type: <%= addr["type"] %> </p></li>
+      <% end %>
+    <% end %>
+    </ul>
+    <ul class="pagination"></ul>
+  </div>
+<% end %>
