@@ -1,6 +1,6 @@
 development:
   api:
-    base_url: <%= ENV["API_BASE_URL"] %>
+    base_url: "https://vida-core-development.herokuapp.com/"
     user:
       email:  <%= ENV["API_USER_EMAIL"] %>
       password: <%= ENV["API_USER_PASSWORD"] %>
