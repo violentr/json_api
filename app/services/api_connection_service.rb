@@ -16,12 +16,13 @@ class ApiConnectionService
         faraday.adapter Faraday.default_adapter
       end
     rescue
-      raise ApiConnectionServiceError.new("Some API settings are missing")
+      error
     end
   end
 
   def auth_hash
     response = connect.post(BASE_URL + 'api/sessions', api_user_credentials)
+    error unless response.status == 201
     email = response.body["data"]["attributes"]["key"]
     token = response.body["data"]["attributes"]["token"]
     headers.merge!({"X-USER-TOKEN" => token, "X-USER-EMAIL"=> email})
@@ -41,6 +42,10 @@ class ApiConnectionService
 
   def headers
     {accept: "application/json", content_type: "application/json"}
+  end
+
+  def error
+    raise ApiConnectionServiceError.new("Some API settings are missing")
   end
 
 end
